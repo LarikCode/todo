@@ -18,24 +18,27 @@ class TodoController extends Controller
     }
 
     public function edit(Todo $todo){
-        //dd($todo->title);
         return view('todos.edit', compact('todo'));
     }
 
     public function store(TodoCreateRequest $request){
-        Todo::create($request->all());
+        auth()->user()->todos()->create($request->all());
         return redirect()->back()->with('message', 'Todo Created Successfully');
     }
 
     public function update(TodoCreateRequest $request, Todo $todo)
     {
-        //dd($request->all());
         $todo->update(['title' => $request->title]);
-        return redirect(route('todo.index'))->with('message', 'Updated!');
+        return redirect(route('todos.index'))->with('message', 'Updated!');
     }
 
     public function complete(Todo $todo){
         $todo->update(['completed' => !$todo->completed]);
-        return redirect()->back()->with('message', 'Task Marked as completed!');
+        return redirect()->back()->with('message', 'Task Marked as '.($todo->completed ? 'completed!' : 'incompleted!'));
+    }
+
+    public function destroy(Todo $todo){
+        $todo->delete();
+        return redirect()->back()->with('message', 'Task Deleted!');
     }
 }

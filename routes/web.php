@@ -17,17 +17,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/todos', 'TodoController@index')->name('todo.index');
-
-Route::get('/todos/create', 'TodoController@create');
-
-Route::get('/todos/{todo}/edit', 'TodoController@edit');
-
-Route::patch('/todos/{todo}/edit', 'TodoController@update')->name('todo.update');
-
-Route::put('/todos/{todo}/complete', 'TodoController@complete')->name('todo.complete');
-
-Route::post('/todos/create', 'TodoController@store');
+Route::middleware('auth')->group(function (){
+    Route::resource('/todos', 'TodoController');
+    Route::put('/todos/{todo}/complete', 'TodoController@complete')->name('todos.complete');
+});
 
 Route::get('/dashboard', function () {
     return view('dashboard');
