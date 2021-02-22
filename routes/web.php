@@ -17,7 +17,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware('auth')->group(function (){
+Route::middleware('auth')->group(function () {
     Route::resource('/todos', 'TodoController');
     Route::put('/todos/{todo}/complete', 'TodoController@complete')->name('todos.complete');
 });
@@ -26,4 +26,4 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

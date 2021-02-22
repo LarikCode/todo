@@ -10,7 +10,7 @@
 
     <ul class="my-5">
         <x-alert/>
-        @foreach($todos as $todo)
+        @forelse($todos as $todo)
             <li class="flex justify-between pl-4 pr-2 py-4">
                 <span
                     onclick="event.preventDefault();document.getElementById('form-complete-{{$todo->id}}').submit()"
@@ -44,7 +44,9 @@
                     </form>
                 </div>
             </li>
-        @endforeach
+        @empty
+            <p>No task available, create one.</p>
+        @endforelse
     </ul>
 @endsection
 

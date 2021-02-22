@@ -2,7 +2,7 @@
 
 @section('content')
     <h1 class="text-2xl border-b border-gray-300 pb-4">Update this todo list</h1>
-    <x-alert />
+    <x-alert/>
     <form method="POST" action="{{route('todos.update', $todo->id)}}" class="py-y pt-10">
         @csrf
         @method('patch')
