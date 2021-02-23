@@ -43,7 +43,7 @@
 
                 <div class="flex">
                     @if($todo->completed)
-                        <p class="line-through">{{$todo->title}}</p>
+                        <p class="line-through" style="text-decoration-color:red; text-decoration-style: wavy;">{{$todo->title}}</p>
                     @else
                         <p>{{$todo->title}}</p>
                     @endif
