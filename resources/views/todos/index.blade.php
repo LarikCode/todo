@@ -12,22 +12,45 @@
         <x-alert/>
         @forelse($todos as $todo)
             <li class="flex justify-between pl-4 pr-2 py-4">
-                <span
-                    onclick="event.preventDefault();document.getElementById('form-complete-{{$todo->id}}').submit()"
-                    class="fas fa-check text-{{$todo->completed ? 'green-500' : 'gray-300'}} cursor-pointer px-2"></span>
-                <form style="display:none" id="{{'form-complete-'.$todo->id}}" method="post"
-                      action="{{route('todos.complete', $todo->id)}}">
-                    @csrf
-                    @method('put')
-                </form>
+                <div class="inline-flex">
+                    <span
+                        onclick="event.preventDefault();document.getElementById('form-complete-{{$todo->id}}').submit()"
+                        class="fas fa-check text-{{$todo->completed ? 'green-500' : 'gray-300'}} cursor-pointer px-2"></span>
+                    <form style="display:none" id="{{'form-complete-'.$todo->id}}" method="post"
+                          action="{{route('todos.complete', $todo->id)}}">
+                        @csrf
+                        @method('put')
+                    </form>
 
-                @if($todo->completed)
-                    <p class="line-through">{{$todo->title}}</p>
-                @else
-                    <p>{{$todo->title}}</p>
-                @endif
+                    <span
+                        onclick="event.preventDefault();document.getElementById('form-up-{{$todo->id}}').submit()"
+                        class="fas fa-arrow-up cursor-pointer px-1"></span>
+                    <form style="display:none" id="{{'form-up-'.$todo->id}}" method="post"
+                          action="{{route('todos.up', $todo->id)}}">
+                        @csrf
+                        @method('put')
+                    </form>
 
-                <div>
+                    <span
+                        onclick="event.preventDefault();document.getElementById('form-down-{{$todo->id}}').submit()"
+                        class="fas fa-arrow-down cursor-pointer px-1"></span>
+                    <form style="display:none" id="{{'form-down-'.$todo->id}}" method="post"
+                          action="{{route('todos.down', $todo->id)}}">
+                        @csrf
+                        @method('put')
+                    </form>
+                </div>
+
+                <div class="flex">
+                    @if($todo->completed)
+                        <p class="line-through">{{$todo->title}}</p>
+                    @else
+                        <p>{{$todo->title}}</p>
+                    @endif
+                </div>
+
+
+                <div class="inline-flex">
                     <a href="{{route('todos.edit', $todo->id)}}" class="text-yellow-500 cursor-pointer">
                         <span class="fas fa-edit px-2"></span>
                     </a>

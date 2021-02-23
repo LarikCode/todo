@@ -20,6 +20,8 @@ Route::get('/', function () {
 Route::middleware('auth')->group(function () {
     Route::resource('/todos', 'TodoController');
     Route::put('/todos/{todo}/complete', 'TodoController@complete')->name('todos.complete');
+    Route::put('/todos/{todo}/up', 'TodoController@up')->name('todos.up');
+    Route::put('/todos/{todo}/down', 'TodoController@down')->name('todos.down');
 });
 
 Route::get('/dashboard', function () {
