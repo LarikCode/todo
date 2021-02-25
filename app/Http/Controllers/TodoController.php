@@ -64,13 +64,16 @@ class TodoController extends Controller
     {
         $prevPosition = auth()->user()->todoLists()->find($todoList->id)->todos()->where('position', '<', $todo->position)
             ->where('completed', $todo->completed)->max('position');
+
         if (is_null($prevPosition)) {
             return redirect()->back()->with('error', 'Task can\'t Down!');
         }
-        $prevTodo = auth()->user()->todoLists()->find($todoList->id)->todos()->where('position', $prevPosition)->first();
-        $prevTodo->position = $todo->position;
-        $prevTodo->save();
+
+        auth()->user()->todoLists()->find($todoList->id)->todos()
+            ->where('position', $prevPosition)->first()->update(['position' => $todo->position]);
+
         $todo->update(['position' => $prevPosition]);
+
         return redirect()->back()->with('message', 'Task Down!');
     }
 
@@ -78,13 +81,16 @@ class TodoController extends Controller
     {
         $nextPosition = auth()->user()->todoLists()->find($todoList->id)->todos()->where('position', '>', $todo->position)
             ->where('completed', $todo->completed)->min('position');
+
         if (is_null($nextPosition)) {
             return redirect()->back()->with('error', 'Task can\'t Up!');
         }
-        $prevTodo = auth()->user()->todoLists()->find($todoList->id)->todos()->where('position', $nextPosition)->first();
-        $prevTodo->position = $todo->position;
-        $prevTodo->save();
+
+        auth()->user()->todoLists()->find($todoList->id)->todos()
+            ->where('position', $nextPosition)->first()->update(['position' => $todo->position]);
+
         $todo->update(['position' => $nextPosition]);
+
         return redirect()->back()->with('message', 'Task Up!');
     }
 }
