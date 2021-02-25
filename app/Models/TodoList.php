@@ -11,6 +11,14 @@ class TodoList extends Model
 
     protected $fillable = ['title'];
 
+    /**
+     * Get the user that owns the todoList.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function todos()
     {
         return $this->hasMany(Todo::class);

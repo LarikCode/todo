@@ -17,6 +17,7 @@ class TodoController extends Controller
             ['completed', 'asc'],
             ['position', 'desc'],
         ]);
+
         return view('todolist.todos.index', compact('todos', 'todoLists'));
     }
 

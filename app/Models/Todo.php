@@ -10,4 +10,12 @@ class Todo extends Model
     use HasFactory;
 
     protected $fillable = ['title', 'completed', 'position'];
+
+    /**
+     * Get the todoList that owns the todo.
+     */
+    public function todoList()
+    {
+        return $this->belongsTo(TodoList::class);
+    }
 }
