@@ -18,10 +18,12 @@ Route::get('/', function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::resource('/todos', 'TodoController');
+    Route::resource('todoList.todos', TodoController::class);
     Route::put('/todos/{todo}/complete', 'TodoController@complete')->name('todos.complete');
-    Route::put('/todos/{todo}/up', 'TodoController@up')->name('todos.up');
-    Route::put('/todos/{todo}/down', 'TodoController@down')->name('todos.down');
+    Route::put('/{todoList}/todos/{todo}/up', 'TodoController@up')->name('todos.up');
+    Route::put('/{todoList}/todos/{todo}/down', 'TodoController@down')->name('todos.down');
+
+    Route::resource('/todolist', 'TodoListController');
 });
 
 Route::get('/dashboard', function () {

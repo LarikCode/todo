@@ -13,12 +13,20 @@ class CreateTodosTable extends Migration
      */
     public function up()
     {
-        Schema::create('todos', function (Blueprint $table) {
+        Schema::create('todo_lists', function (Blueprint $table) {
             $table->id();
             $table->string('title');
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('position')->default(0);
             $table->foreign('user_id')->references('id')->on('users');
+            $table->timestamps();
+        });
+
+        Schema::create('todos', function (Blueprint $table) {
+            $table->id();
+            $table->string('title');
+            $table->unsignedBigInteger('todo_list_id');
+            $table->unsignedBigInteger('position')->default(0);
+            $table->foreign('todo_list_id')->references('id')->on('todo_lists')->onDelete('cascade');;
             $table->boolean('completed')->default(false);
             $table->timestamps();
         });
@@ -32,5 +40,6 @@ class CreateTodosTable extends Migration
     public function down()
     {
         Schema::dropIfExists('todos');
+        Schema::dropIfExists('todo_lists');
     }
 }

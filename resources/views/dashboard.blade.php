@@ -3,7 +3,12 @@
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Dashboard') }}
         </h2>
+        <a href="{{route('todolist.index')}}">
+            <h2 class="underline font-semibold text-xl text-blue-700 leading-tight">To-do lists</h2>
+        </a>
     </x-slot>
+
+
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">

@@ -46,6 +46,6 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        return redirect(route('todos.index')); //RouteServiceProvider::HOME
+        return redirect(route('todolist.index')); //RouteServiceProvider::HOME
     }
 }

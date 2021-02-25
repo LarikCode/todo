@@ -1,9 +1,13 @@
-@extends('todos.layout')
+@extends('todolist.todos.layout')
 
 @section('content')
     <div class="flex justify-center border-b border-gray-300 pb-4">
-        <h1 class="text-2xl">All Your Todos</h1>
-        <a href="{{route('todos.create')}}" class="mx-5 py-2 px-1 bg-blue-400 cursor-pointer rounded text-white">
+        <a href="{{route('todolist.index')}}" class="mx-5 py-2 px-1 bg-blue-400 cursor-pointer rounded text-white">
+            <span class="fas fa-arrow-left"></span>
+        </a>
+        <h1 class="text-2xl">{{$todoLists->title}}</h1>
+        <a href="{{route('todoList.todos.create', $todoLists->id)}}"
+           class="mx-5 py-2 px-1 bg-blue-400 cursor-pointer rounded text-white">
             <span class="fas fa-plus-circle"></span>
         </a>
     </div>
@@ -26,7 +30,7 @@
                         onclick="event.preventDefault();document.getElementById('form-up-{{$todo->id}}').submit()"
                         class="fas fa-arrow-up cursor-pointer px-1"></span>
                     <form style="display:none" id="{{'form-up-'.$todo->id}}" method="post"
-                          action="{{route('todos.up', $todo->id)}}">
+                          action="{{route('todos.up', ['todoList' => $todoLists->id, 'todo' => $todo->id])}}">
                         @csrf
                         @method('put')
                     </form>
@@ -35,7 +39,7 @@
                         onclick="event.preventDefault();document.getElementById('form-down-{{$todo->id}}').submit()"
                         class="fas fa-arrow-down cursor-pointer px-1"></span>
                     <form style="display:none" id="{{'form-down-'.$todo->id}}" method="post"
-                          action="{{route('todos.down', $todo->id)}}">
+                          action="{{route('todos.down', ['todoList' => $todoLists->id, 'todo' => $todo->id])}}">
                         @csrf
                         @method('put')
                     </form>
@@ -43,25 +47,27 @@
 
                 <div class="flex">
                     @if($todo->completed)
-                        <p class="line-through" style="text-decoration-color:red; text-decoration-style: wavy;">{{$todo->title}}</p>
+                        <p class="line-through"
+                           style="text-decoration-color:red; text-decoration-style: wavy;">{{$todo->title}}</p>
                     @else
                         <p>{{$todo->title}}</p>
                     @endif
                 </div>
 
-
                 <div class="inline-flex">
-                    <a href="{{route('todos.edit', $todo->id)}}" class="text-yellow-500 cursor-pointer">
+                    <a href="{{route('todoList.todos.edit', ['todoList' => $todoLists->id, 'todo' => $todo->id])}}"
+                       class="text-yellow-500 cursor-pointer">
                         <span class="fas fa-edit px-2"></span>
                     </a>
-                    <a href="{{route('todos.edit', $todo->id)}}" class="cursor-pointer">
-                        <span class="fas fa-trash text-red-500 px-2" onclick="event.preventDefault();
+                    <a href="" class="cursor-pointer">
+                        <span class="fas fa-trash text-red-500 px-2 cursor-pointer" onclick="event.preventDefault();
                             if(confirm('Are you really want to delete?')){
                             document.getElementById('form-delete-{{$todo->id}}').submit()
-                            }"></span>
+                            }">
+                        </span>
                     </a>
                     <form style="display:none" id="{{'form-delete-'.$todo->id}}" method="post"
-                          action="{{route('todos.destroy', $todo->id)}}">
+                          action="{{route('todoList.todos.destroy', ['todoList' => $todoLists->id, 'todo' => $todo->id])}}">
                         @csrf
                         @method('delete')
                     </form>

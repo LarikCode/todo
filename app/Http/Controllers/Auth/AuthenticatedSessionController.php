@@ -32,7 +32,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('todos.index')); // RouteServiceProvider::HOME
+        return redirect()->intended(route('todolist.index')); // RouteServiceProvider::HOME
     }
 
     /**

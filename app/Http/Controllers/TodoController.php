@@ -4,42 +4,48 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TodoCreateRequest;
 use App\Models\Todo;
-use http\Env\Request;
+use App\Models\TodoList;
+use Illuminate\Http\Request;
 
 class TodoController extends Controller
 {
-    public function index()
+    public function index(TodoList $todoList)
     {
-        $todos = auth()->user()->todos->sortBy([
+        $todoLists = auth()->user()->todoLists->find($todoList->id);
+
+        $todos = $todoLists->find($todoList->id)->todos->sortBy([
             ['completed', 'asc'],
             ['position', 'desc'],
         ]);
-        return view('todos.index', compact('todos'));
+        return view('todolist.todos.index', compact('todos', 'todoLists'));
     }
 
-    public function create()
+    public function create(TodoList $todoList)
     {
-        return view('todos.create');
+        return view('todolist.todos.create', compact('todoList'));
     }
 
-    public function edit(Todo $todo)
+    public function edit(TodoList $todoList, Todo $todo)
     {
-        return view('todos.edit', compact('todo'));
+        return view('todolist.todos.edit', compact('todoList', 'todo'));
     }
 
-    public function store(TodoCreateRequest $request)
+    public function store(TodoCreateRequest $request, TodoList $todoList)
     {
-        $maxPosition = auth()->user()->todos()->max('position');
-        auth()->user()->todos()->create(array_merge($request->all(), [
+        $maxPosition = auth()->user()->todoLists()->find($todoList->id)->todos()->max('position');
+
+        auth()->user()->todoLists()->find($todoList->id)->todos()->create(array_merge($request->all(), [
             'position' => $maxPosition + 1,
+            'todo_list_id' => $todoList->id
         ]));
+
         return redirect()->back()->with('message', 'Todo Created Successfully');
     }
 
-    public function update(TodoCreateRequest $request, Todo $todo)
+    public function update(TodoCreateRequest $request, TodoList $todoList, Todo $todo)
     {
-        $todo->update(['title' => $request->title]);
-        return redirect(route('todos.index'))->with('message', 'Updated!');
+        auth()->user()->todoLists()->find($todoList->id)->todos()->find($todo->id)->update(['title' => $request->title]);
+        return redirect(route('todoList.todos.index', $todoList->id))->with('message', 'Updated!');
     }
 
     public function complete(Todo $todo)
@@ -48,34 +54,34 @@ class TodoController extends Controller
         return redirect()->back()->with('message', 'Task Marked as ' . ($todo->completed ? 'completed!' : 'incompleted!'));
     }
 
-    public function destroy(Todo $todo)
+    public function destroy(TodoList $todoList, Todo $todo)
     {
         $todo->delete();
         return redirect()->back()->with('message', 'Task Deleted!');
     }
 
-    public function down(Todo $todo)
+    public function down(TodoList $todoList, Todo $todo)
     {
-        $prevPosition = auth()->user()->todos()->where('position', '<', $todo->position)
+        $prevPosition = auth()->user()->todoLists()->find($todoList->id)->todos()->where('position', '<', $todo->position)
             ->where('completed', $todo->completed)->max('position');
         if (is_null($prevPosition)) {
             return redirect()->back()->with('error', 'Task can\'t Down!');
         }
-        $prevTodo = auth()->user()->todos()->where('position', $prevPosition)->first();
+        $prevTodo = auth()->user()->todoLists()->find($todoList->id)->todos()->where('position', $prevPosition)->first();
         $prevTodo->position = $todo->position;
         $prevTodo->save();
         $todo->update(['position' => $prevPosition]);
         return redirect()->back()->with('message', 'Task Down!');
     }
 
-    public function up(Todo $todo)
+    public function up(TodoList $todoList, Todo $todo)
     {
-        $nextPosition = auth()->user()->todos()->where('position', '>', $todo->position)
+        $nextPosition = auth()->user()->todoLists()->find($todoList->id)->todos()->where('position', '>', $todo->position)
             ->where('completed', $todo->completed)->min('position');
         if (is_null($nextPosition)) {
             return redirect()->back()->with('error', 'Task can\'t Up!');
         }
-        $prevTodo = auth()->user()->todos()->where('position', $nextPosition)->first();
+        $prevTodo = auth()->user()->todoLists()->find($todoList->id)->todos()->where('position', $nextPosition)->first();
         $prevTodo->position = $todo->position;
         $prevTodo->save();
         $todo->update(['position' => $nextPosition]);
